@@ -11,7 +11,7 @@ session_start();
 </head>
 <body>
 	<header>
-		<h1>WEB2 TD56 TP45 PHP Une Application BDD Granjeon</h1>
+		<h1>SAE 23 - Granjeon Keroulas TITRE A COMPLETER</h1>
 	</header>
 
 	<footer>
