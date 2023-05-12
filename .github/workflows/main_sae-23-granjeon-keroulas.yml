@@ -56,5 +56,5 @@ jobs:
         with:
           app-name: 'SAE-23-Granjeon-Keroulas'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A678C9D1E43B4BA89367D1375A0A101E }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B730F256DB334579BD51D264106FD6AA }}
           package: .
