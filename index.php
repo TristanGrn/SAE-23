@@ -1,7 +1,6 @@
-<?php 
-include('fonctions.php');
+<?php
+include "fonctions.php";
 session_start();
-session_destroy();
 ?>
 
 <!DOCTYPE html>
@@ -14,12 +13,13 @@ session_destroy();
 
 <body>
 	<?php
-	aff_header();
-	if (isset($_GET['action']) && $_GET['action'] == 'logout' && !empty($_SESSION)) {
-		$_SESSION = array();
+ 	aff_header();
+	if (isset($_GET["action"]) && $_GET["action"] == "logout" && !empty($_SESSION)) {
+		$_SESSION = [];
 		session_destroy();
+		header("Location: connexion.php");
 		// redirect("index.php", 0);
-	}
+		}
 	?>
 	
 	<nav>
@@ -28,18 +28,16 @@ session_destroy();
 	</nav>
 	<!-- ARTICLE POUR ZONE PRINCIPALE ? -->
 	
-	<div class="row">
-		<article class="col-lg-1 border"></article>
-		<article class="col-lg-10 border ">
-			TEST 
-		</article>
-		<article classs="col-lg-1 border"></article>
-
+	<div class="container">
+		<div class="row">
+			<article class="col-lg-1 border"></article>
+			<article class="col-lg-10 border ">
+				TEST 
+			</article>
+			<article class="col-lg-1 border"></article>
+		</div>
 	</div>
 
-	<footer>
-			<p>Pied de la page <!-- A COMPLETER --></p>
-		</footer>
+	<?php footer() ?>
 </body>
 </html>
-
