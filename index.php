@@ -9,10 +9,12 @@ session_start();
 	<meta charset="UTF-8">
 	<title>Accueil</title>
 	<link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
+	<link href="./Bootstrap/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 	<?php
+	// affichage du header
  	aff_header();
 	if (isset($_GET["action"]) && $_GET["action"] == "logout" && !empty($_SESSION)) {
 		$_SESSION = [];
@@ -37,7 +39,8 @@ session_start();
 			<article class="col-lg-1 border"></article>
 		</div>
 	</div>
-
+	<!-- Affichage du footer -->
 	<?php footer() ?>
+	
 </body>
 </html>

@@ -9,9 +9,11 @@ session_start();
 	<meta charset="UTF-8">
 	<title>Connexion</title>
 	<link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
+  <link href="./Bootstrap/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
+  <!-- Affichage du header-->
 	<?php aff_header(); ?>
 	<nav>
 		<h1>NAVBAR DANS HEADER ?</h1>
@@ -77,7 +79,6 @@ session_start();
         echo "</article>";
       }
     
-      // FAIRE ELSE COMPTE INEXISTANT !!!!!!
       else {
         echo "<article>";
         echo "<h1 class='text-center'>Vous êtes déja connecté</h1>";
@@ -87,7 +88,7 @@ session_start();
       } ?>
     
 	</div>
-
+<!-- Affichage du footer -->
 	<?php footer(); ?>
 
 </body>

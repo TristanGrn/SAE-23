@@ -4,14 +4,38 @@ function aff_header(){
     ?>
     <header class="p-3 bg-dark text-white">
     	<div class="row align-items-center">
-    		<div class="col-lg-4">
-      			<a href="index.php" class="text-decoration-none"> Accueil
-
-                </a>
+    		<div class="col-lg-8 nav-bar">
+                <nav class="navbar sticky-top navbar-expand-md navbar-dark" >
+                    
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0 navigation">
+						<li class="nav-item">
+                            <a href="index.php" class="nav-link active"> Accueil </a>
+						</li>
+						
+                        <!-- SI ADMIN ALORS AFFICHER LES PAGES INSERTION? MODIF ETC... SINON RIEN/PANIER ?-->
+                        <?php 
+                        if (!empty($_SESSION)) {
+                            if ($_SESSION['statut'] == 'admin') {
+                                echo '<li>';
+                                    echo "<a class='nav-link'> Option d'administration :</a>";
+                                echo '</li>';
+                                echo '<li class="nav-item">';
+                                    echo '<a href="" class="nav-link active"> Inserer un élément</a>';
+                                echo '</li>';
+                                echo '<li class="nav-item">';
+                                    echo '<a href="modification.php" class="nav-link active"> Modifier un élément </a>';
+                                echo '</li>';
+                                echo '<li class="nav-item">';
+                                    echo '<a href="" class="nav-link active"> Supprimer un élément </a>';
+                                echo '</li>';
+                                
+                            }
+                        }
+                        ?>
+						
+                </nav>
     		</div>
-    		<div class="col-lg-4">
-    		A COMPLETER
-    		</div>
+    		
    			<div class="col-lg-4">
 				<?php if (empty($_SESSION)) { ?>
                     <div class="row align-items-center">
@@ -54,6 +78,7 @@ function footer(){
     <footer>
 			<p>Pied de la page A COMPLETER</p>
 	</footer>";
+    
 }
 
 function Authentif($user, $pass){
@@ -63,7 +88,6 @@ function Authentif($user, $pass){
     $pass = $bdd->quote($pass);
     // Ecriture de la requete
     $rq ="SELECT NOM_USER, MDP FROM Users WHERE NOM_USER = " .$user ." AND MDP = " .$pass;
-    var_dump($rq);
     // On effectue la requete
     $resultat = $bdd->query($rq);
     $tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
