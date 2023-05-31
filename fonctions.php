@@ -1,34 +1,38 @@
 <?php
-// Création du header
+// Création du header avec barre de navigation
 function aff_header(){
     ?>
     <header class="p-3 bg-dark text-white">
     	<div class="row align-items-center">
     		<div class="col-lg-8 nav-bar">
                 <nav class="navbar sticky-top navbar-expand-md navbar-dark" >
-                    
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0 navigation">
-						<li class="nav-item">
-                            <a href="index.php" class="nav-link active"> Accueil </a>
-						</li>
-						
-                        <!-- SI ADMIN ALORS AFFICHER LES PAGES INSERTION? MODIF ETC... SINON RIEN/PANIER ?-->
+                        
                         <?php 
+                        // Si Utilisateur connecté alors affichage boutton accès accueil
                         if (!empty($_SESSION)) {
+                            ?>
+                            <ul class="navbar-nav me-auto mb-2 mb-md-0 navigation">
+                                <li class="nav-item">
+                                    <a href="index.php" class="nav-link active"> Accueil </a>
+                                </li>
+						
+						<?php
+                        // Si admin alors affichage des options d'administration sinon non-affichage 
                             if ($_SESSION['statut'] == 'admin') {
-                                echo '<li>';
-                                    echo "<a class='nav-link'> Option d'administration :</a>";
-                                echo '</li>';
-                                echo '<li class="nav-item">';
-                                    echo '<a href="" class="nav-link active"> Inserer un élément</a>';
-                                echo '</li>';
-                                echo '<li class="nav-item">';
-                                    echo '<a href="modification.php" class="nav-link active"> Modifier un élément </a>';
-                                echo '</li>';
-                                echo '<li class="nav-item">';
-                                    echo '<a href="" class="nav-link active"> Supprimer un élément </a>';
-                                echo '</li>';
-                                
+                                ?>
+                                <li>
+                                    <a class='nav-link'> Option d'administration :</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="" class="nav-link active"> Inserer un élément</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="modification.php" class="nav-link active"> Modifier un élément </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="" class="nav-link active"> Supprimer un élément </a>
+                                </li>
+                            <?php    
                             }
                         }
                         ?>
@@ -37,6 +41,7 @@ function aff_header(){
     		</div>
     		
    			<div class="col-lg-4">
+                <!-- Affichage du boutton connexion diffère si user connecté ou non -->
 				<?php if (empty($_SESSION)) { ?>
                     <div class="row align-items-center">
                         <div class="col-lg-8 text-end ">
@@ -70,9 +75,11 @@ function aff_header(){
 		    </div> 
         </div>
   </header>
+  <br>
 <?php
 }
 
+// Création du footer
 function footer(){
     echo "
     <footer>
@@ -81,9 +88,33 @@ function footer(){
     
 }
 
+function affichage($tab){
+    $bdd = new PDO("sqlite:bdd/Ventes.sqlite");
+    $rq = "SELECT *  FROM $tab";
+    $resultat = $bdd->query($rq);
+    $tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
+    echo '<table class="table">';	
+	echo '<tr>';
+		foreach($tableau_assoc[0] as $colonne=>$value){	
+            echo '<th>'.$colonne.'</th>';		
+        }
+            echo '</tr>';
+            // le corps de la table
+            foreach($tableau_assoc as $ligne){
+                echo '<tr>';
+                foreach($ligne as $elem){		
+                    echo "<td>$elem</td>";		
+                }
+                echo "</tr>";
+            }
+		echo '</table>';
+
+}
+
+// Authentification de l'utilisateur
 function Authentif($user, $pass){
     $reussite = false;
-    $bdd = new PDO("sqlite:bdd/comptes.sqlite");
+    $bdd = new PDO("sqlite:bdd/Comptes.sqlite");
     $user = $bdd->quote($user);
     $pass = $bdd->quote($pass);
     // Ecriture de la requete
@@ -95,6 +126,7 @@ function Authentif($user, $pass){
     return $reussite;
 }
 
+// Récuperation du statut de l'utilisateur
 function statut($login){
     $bdd = new PDO("sqlite:bdd/Comptes.sqlite");
     $login = $bdd->quote($login);
@@ -106,15 +138,29 @@ function statut($login){
     $statut = $tableau_assoc['Statut'];
     return $statut;
 }
+
+// Fonction pour récuper l'idC et l'idP si l'utilisateur choisis la table Achat
+function get_IDs($IDs){
+    $IDs = explode(";", $IDs);
+    // NB idC d'abbord puis idP
+    $IDs = [$IDs[0], $IDs[1]];
+    return $IDs;
+}
+
+function modif_acheteur($tab, $idC, $NomP, $ville){
+    $reussite = 0;
+    try{
+    $bdd = new PDO("sqlite:bdd/Ventes.sqlite");
+    $rq = "UPDATE $tab Set NomP = '$NomP',
+            Ville = '$ville'
+            WHERE idC =' $idC'";
+    $resultat = $bdd->exec($rq);
+    $reussite = 1;
+    }
+    catch (\Throwable $th) {
+        return $reussite;
+    }
+    return $reussite;
+}
+
 ?>
-<!-- function authentification($mail,$pass){
-		$retour = false ;
-		$madb = new PDO('sqlite:bdd/comptes.sqlite'); 
-		$mail= $madb->quote($mail);
-		$pass = $madb->quote($pass);
-		$requete = "SELECT EMAIL,PASS FROM utilisateurs WHERE EMAIL = ".$mail." AND PASS = ".$pass ;
-		//var_dump($requete);echo "<br/>";  	
-		$resultat = $madb->query($requete);
-		$tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
-		if (sizeof($tableau_assoc)!=0) $retour = true;	
-		return $r -->

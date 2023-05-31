@@ -1,5 +1,6 @@
 <?php
 include "fonctions.php";
+include "formulaire.php";
 session_start();
 ?>
 
@@ -9,17 +10,16 @@ session_start();
 	<meta charset="UTF-8">
 	<title>Connexion</title>
 	<link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
+  <!-- Feuille de style non bootstrap : -->
   <link href="./Bootstrap/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
   <!-- Affichage du header-->
 	<?php aff_header(); ?>
-	<nav>
-		<h1>NAVBAR DANS HEADER ?</h1>
-		<!-- BARRE DE NAVIGATION AVEC ACCES AUX ONGLETS -->
-	</nav>
+
 	<div class="border container justify-content-center">
+    <!-- REMOVE BORDER BOOTSTRAP ET AJOUT BORDER CSS PROPRE -->
     <?php if (empty($_SESSION)) { ?>
       <article>
         <h1 class="text-center">Connexion</h1>
@@ -80,11 +80,18 @@ session_start();
       }
     
       else {
-        echo "<article>";
-        echo "<h1 class='text-center'>Vous êtes déja connecté</h1>";
+        ?>
+        <article>
+          <h1 class='text-center'>Vous êtes déja connecté</h1>
+          <p class='text-center'>Redirection en cours</p>
+          <div class='d-flex justify-content-center'>
+            <div class='spinner-border' role='status'>
+            </div>
+          </div>
+        </article>
+        <?php
         // Redirection vers la page indexe.php si user deja connecté.e
         header("Refresh: 2; URL = index.php");
-        echo "</article>";
       } ?>
     
 	</div>

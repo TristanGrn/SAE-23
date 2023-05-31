@@ -1,5 +1,6 @@
 <?php
 include "fonctions.php";
+include "formulaire.php";
 session_start();
 ?>
 
@@ -9,6 +10,7 @@ session_start();
 	<meta charset="UTF-8">
 	<title>Accueil</title>
 	<link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
+	<!-- Feuille de style non bootstrap : -->
 	<link href="./Bootstrap/style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -19,19 +21,22 @@ session_start();
 	if (isset($_GET["action"]) && $_GET["action"] == "logout" && !empty($_SESSION)) {
 		$_SESSION = [];
 		session_destroy();
+		// Si deconnexion, redirection vers page de connexion
 		header("Location: connexion.php");
-		// redirect("index.php", 0);
 		}
-	?>
+
+	if (empty($_SESSION)) {
+		header("Location: connexion.php");
+	}
+	else {
 	
-	<nav>
-		<h1>NAVIGATION DANS LE HEADER ?</h1>
-		<!-- BARRE DE NAVIGATION AVEC ACCES AUX ONGLETS -->
-	</nav>
+	?>
+
 	<!-- ARTICLE POUR ZONE PRINCIPALE ? -->
 	
 	<div class="container">
 		<div class="row">
+			<!-- REMOVE BORDER BOOTSTRAP ET AJOUT BORDER CSS PROPRE -->
 			<article class="col-lg-1 border"></article>
 			<article class="col-lg-10 border ">
 				TEST 
@@ -40,7 +45,9 @@ session_start();
 		</div>
 	</div>
 	<!-- Affichage du footer -->
-	<?php footer() ?>
+	<?php 
+	}
+	footer() ?>
 	
 </body>
 </html>
