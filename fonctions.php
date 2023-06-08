@@ -2,10 +2,10 @@
 // Création du header avec barre de navigation
 function aff_header(){
     ?>
-    <header class="p-3 bg-dark text-white">
-    	<div class="row align-items-center">
+    <header class="p-3 bg-dark text-white sticky-top">
+    	<div class="row align-items-center ">
     		<div class="col-lg-8 nav-bar">
-                <nav class="navbar sticky-top navbar-expand-md navbar-dark" >
+                <nav class="navbar navbar-expand-md navbar-dark">
                         
                         <?php 
                         // Si Utilisateur connecté alors affichage boutton accès accueil
@@ -34,6 +34,7 @@ function aff_header(){
                                 </li>
                             <?php    
                             }
+                            echo '</ul>';
                         }
                         ?>
 						
@@ -81,34 +82,24 @@ function aff_header(){
 
 // Création du footer
 function footer(){
-    echo "
-    <footer>
-			<p>Pied de la page A COMPLETER</p>
-	</footer>";
+    echo '
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top fixed-bottom">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+      <span class="mb-3 mb-md-0 text-muted">© 2022 Company, Inc</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+  </svg>
+    </ul>
     
-}
-
-function affichage($tab){
-    $bdd = new PDO("sqlite:bdd/Ventes.sqlite");
-    $rq = "SELECT *  FROM $tab";
-    $resultat = $bdd->query($rq);
-    $tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
-    echo '<table class="table">';	
-	echo '<tr>';
-		foreach($tableau_assoc[0] as $colonne=>$value){	
-            echo '<th>'.$colonne.'</th>';		
-        }
-            echo '</tr>';
-            // le corps de la table
-            foreach($tableau_assoc as $ligne){
-                echo '<tr>';
-                foreach($ligne as $elem){		
-                    echo "<td>$elem</td>";		
-                }
-                echo "</tr>";
-            }
-		echo '</table>';
-
+  </footer>
+  ';
+    
 }
 
 // Authentification de l'utilisateur
@@ -151,7 +142,8 @@ function modif_acheteur($tab, $idC, $NomP, $ville){
     $reussite = 0;
     try{
     $bdd = new PDO("sqlite:bdd/Ventes.sqlite");
-    $rq = "UPDATE $tab Set NomP = '$NomP',
+    $rq = "UPDATE $tab 
+            Set NomP = '$NomP',
             Ville = '$ville'
             WHERE idC =' $idC'";
     $resultat = $bdd->exec($rq);
@@ -161,6 +153,150 @@ function modif_acheteur($tab, $idC, $NomP, $ville){
         return $reussite;
     }
     return $reussite;
+}
+
+function modif_produits($tab, $idP, $NomP, $prix, $image){
+    $reussite = 0;
+    try{
+    $bdd = new PDO("sqlite:bdd/Ventes.sqlite");
+    $rq = "UPDATE $tab 
+            Set NomP = '$NomP',
+            Prix = '$prix',
+            Illustration = '$image'
+            WHERE idP =' $idP'";
+    $resultat = $bdd->exec($rq);
+    $reussite = 1;
+    }
+    catch (\Throwable $th) {
+        return $reussite;
+    }
+    return $reussite;
+}
+
+// Fonction 'affichage des elements
+function affichage($tab){
+    $bdd = new PDO("sqlite:bdd/Ventes.sqlite");
+    if ($tab == 'Acheteurs') {
+        $rq = "SELECT * FROM $tab";
+    }
+    elseif ($tab == 'Produits') {
+        $rq = "SELECT idP, NomP AS 'Produit', Prix, Illustration AS 'Photo' FROM $tab";
+    }
+    
+    $resultat = $bdd->query($rq);
+    $tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
+
+    // AFFICHAGE TEMPORAIRE DE LA TABLE
+    // CHANGER AFFICHAGE POUR PLUS PROPRE
+    echo '<table class="table">';
+    echo '<thead>';
+	echo '<tr>';
+    
+    if(!isset($tableau_assoc[0]['Photo'])){
+        if (!empty($_POST)) {
+            foreach($tableau_assoc[0] as $colonne=>$value){	
+                echo '<th scope="col">'.$colonne.'</th>';	
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                // le corps de la table
+                foreach($tableau_assoc as $ligne){
+                    if ($ligne["idC"] == $_POST["idC"]) {
+                        echo "<tr class='table-success'>";
+                    }
+                    
+                    else{
+                         echo '<tr>';}
+                    
+                    foreach($ligne as $elem){	
+                        echo "<td>$elem</td>";		
+                        
+                    }
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+
+        else {
+            foreach($tableau_assoc[0] as $colonne=>$value){	
+                echo '<th scope="col">'.$colonne.'</th>';	
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                // le corps de la table
+                foreach($tableau_assoc as $ligne){
+                    
+                         echo '<tr>';
+                    
+                    foreach($ligne as $elem){	
+                        echo "<td>$elem</td>";		
+                        
+                    }
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+		
+    }
+
+    elseif (isset($tableau_assoc[0]['Photo'])) {
+        if (!empty($_POST)) {
+            foreach($tableau_assoc[0] as $colonne=>$value){	
+                echo '<th scope="col">'.$colonne.'</th>';	
+                   
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                // le corps de la table
+                foreach($tableau_assoc as $ligne){
+                    if ($ligne["Produit"] == $_POST["NomP"]) {
+                        echo "<tr class='table-success'>";
+                    }
+                    else{
+                        echo '<tr>';
+                    }
+                    echo "<td>".$ligne['idP']."</td>";
+                    echo "<td>".$ligne['Produit']."</td>";
+                    echo "<td>".$ligne['Prix']." €</td>";
+                    echo "<td><img src='./Images/".$ligne['Photo'].".jpg' 
+                    class='img-fluid rounded' width='100' alt=".$ligne['Photo']." ></td>";
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+        
+        else{
+            foreach($tableau_assoc[0] as $colonne=>$value){
+                if($colonne !=('idP'))	{
+                echo '<th scope="col">'.$colonne.'</th>';	
+                }
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                // le corps de la table
+                foreach($tableau_assoc as $ligne){
+                   
+                        echo '<tr>'; 
+                    echo "<td>".$ligne['Produit']."</td>";
+                    echo "<td>".$ligne['Prix']." €</td>";
+                    echo "<td><img src='./Images/".$ligne['Photo'].".jpg' 
+                    class='img-fluid rounded' width='100' alt=".$ligne['Photo']." ></td>";
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+        
+    }
+
+
 }
 
 ?>

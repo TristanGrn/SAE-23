@@ -1,0 +1,19 @@
+/*Définition des styles*/
+.nav-bar li {
+    float: left;
+    padding: 0 0.1em;
+    border-right: 0.1em #909090 solid;
+}
+
+.nav-bar li:first-child{
+    margin-left: 1em;
+}
+  
+.nav-bar li:last-child, li:nth-child(2){
+    clear: both;
+    border: none;
+}
+
+input[type='number']{
+    width: 17.5em;
+} 

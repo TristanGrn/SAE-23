@@ -9,16 +9,20 @@ session_start();
 <head>
 	<meta charset="UTF-8">
 	<title>Connexion</title>
-	<link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
   <!-- Feuille de style non bootstrap : -->
   <link href="./Bootstrap/style.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Import script pour fonctionnement reCaptcha -->
+    <script src="https://www.google.com/recaptcha/api.js?hl=fr"></script>
+    <script type="text/javascript" src="scripts.js"></script>
+
 </head>
 
 <body>
   <!-- Affichage du header-->
 	<?php aff_header(); ?>
-
-	<div class="border container justify-content-center">
+  <div class="container">
     <!-- REMOVE BORDER BOOTSTRAP ET AJOUT BORDER CSS PROPRE -->
     <?php 
     if (empty($_SESSION)){
@@ -30,6 +34,10 @@ session_start();
     elseif (!($_SESSION['statut'] == 'admin')) {
         echo "<h1 class='text-center'>ERREUR</h1>";
         echo "<p class='text-center'>Vous n'avez pas l'authorisation d'acceder à cette ressource</p>";    
+        echo "<div class='d-flex justify-content-center'>";
+            echo "<div class='spinner-border' role='status'>";
+            echo "</div>";
+          echo "</div>";
         header("Refresh: 2; URL = index.php");  
     }
     else {
@@ -52,35 +60,40 @@ session_start();
             form_modification($_SESSION['table'], $IDs);
           }
 
-          elseif ($_SESSION['table'] == 'Acheteurs') {
-            form_modification($_SESSION['table'], $_POST['elem']);
-        }
-
           else {
             form_modification($_SESSION['table'], $_POST['elem']);
           }
 
         }
 
+        // Affichage dans la cas de modification de la table acheteurs
         if (!empty($_POST) && isset($_POST['idC']) && isset($_POST['NomP']) && isset($_POST['ville'])) {
           $tab = modif_acheteur($_SESSION['table'], $_POST['idC'], $_POST['NomP'], $_POST['ville']);
+
+          if ($tab == 0) {
+            echo "<strong>ERREUR :  Le client '".$_POST['NomP']."' n'a pas pu être modifié</strong>";
+          }
+          else {
+            echo "<strong>Les modifications de  '".$_POST['NomP']."' ont été enregistrées :</strong>";
+          }
           affichage($_SESSION['table']);
-
-        if ($tab == 0) {
-          echo "ERREUR :  Le client '".$_POST['NomP']."' n'a pas pu être modifié";
         }
-        else {
-          echo "<p>Les modifications de  '".$_POST['NomP']."' ont été enregistrées</p>";
-        }
-      }
-        ?>
-       
-<?php
 
+        // Affichage dans la cas de modification de la table Produits
+        if (!empty($_POST) && isset($_POST['idP']) && isset($_POST['NomP']) && isset($_POST['Prix']) && isset($_POST['Image'])) {
+          $tab = modif_produits($_SESSION['table'], $_POST['idP'], $_POST['NomP'], $_POST['Prix'], $_POST['Image']);
+          if ($tab == 0) {
+            echo "<strong>ERREUR :  Le produit '".$_POST['NomP']."' n'a pas pu être modifié : </strong>";
+          }
+          else {
+            echo "<strong>Les modifications du produit  '".$_POST['NomP']."' ont été enregistrées</strong>";
+          }
+          affichage($_SESSION['table']);
+        }
     }
     ?>
-    
   </div>
+    
 <!-- Affichage du footer -->
 	<?php footer(); ?>
 

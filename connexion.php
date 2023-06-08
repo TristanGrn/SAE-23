@@ -12,6 +12,9 @@ session_start();
 	<link rel="stylesheet" href="./Bootstrap/css/bootstrap.min.css">
   <!-- Feuille de style non bootstrap : -->
   <link href="./Bootstrap/style.css" rel="stylesheet" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script type="text/javascript" src="scripts.js"></script>
 </head>
 
 <body>
@@ -26,7 +29,7 @@ session_start();
         <form class="form" id="login" action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
           <fieldset>
           <div class="form-group">
-            <label for="login">Utilisateur :</label>
+            <label for="id_user">Utilisateur :</label>
             <input class="form-control username" type="text" name="login" id="id_user" placeholder="Nom d'utilisateur" required size="10" />
           </div>
           <div class="form-group">

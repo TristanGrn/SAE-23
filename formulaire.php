@@ -4,7 +4,7 @@
 function form_choix_table(){
     $bdd = new PDO("sqlite:bdd/Ventes.sqlite");
     // Ecriture de la requete
-    $rq ="SELECT name FROM sqlite_schema WHERE type='table' AND name != 'sqlite_sequence'";
+    $rq ="SELECT name FROM sqlite_schema WHERE type='table' AND name != 'sqlite_sequence' AND name != 'Achat'";
     // On effectue la requete
     $resultat = $bdd->query($rq);
     $tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
@@ -21,7 +21,7 @@ function form_choix_table(){
 				}
 				?>
 			</select>
-			<input type="submit" value="Modifier"/>
+			<input type="submit" value="Modifier">
 		</fieldset>
 	</form>
 
@@ -48,95 +48,92 @@ function form_choix_elem($table){
 	$resultat = $bdd->query($rq);
 	$tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
 	?>
-	
-	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="text-center">
-		<fieldset> 
-			<label for="id_tab">Table à modifier :</label> 
-				<select id="id_elem" name="elem" size="1">
-				<?php
-				// en foncitno de la table affichage d'une liste différente
-				foreach ($tableau_assoc as $table) {
-					if (isset($table["idC"]) && isset($table["idP"])) {
-						// NB : pour récuperer séparement l'idC de l'idP 
-						// >>> $_POST['elem"][0] -> idC
-						// >>> $_POST['elem'][1] -> idP
+		
+		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="text-center"  onsubmit="return valideCaptcha();">
+			<fieldset> 
+				<label for="id_elem">Element à modifier :</label> 
+					<select id="id_elem" name="elem" size="1">
+					<?php
+					// en fonciton de la table affichage d'une liste différente
+					foreach ($tableau_assoc as $table) {
+						if (isset($table["idC"]) && isset($table["idP"])) {
+							// NB : pour récuperer séparement l'idC de l'idP 
+							// >>> $_POST['elem"][0] -> idC
+							// >>> $_POST['elem'][1] -> idP
 
-						echo '<option value="'.$table["idC"].';'.$table["idP"].'">Acheteur : '.$table["NomA"].' | Achat : '.$table["NomP"].'</option>';
+							echo '<option value="'.$table["idC"].';'.$table["idP"].'">Acheteur : '.$table["NomA"].' | Achat : '.$table["NomP"].'</option>';
+						}
+						elseif (isset($table["idP"])){
+							echo '<option value="'.$table["idP"].'">'.$table["NomP"].'</option>';
+						}
+						else {
+							echo '<option value="'.$table["idC"].'">'.$table["NomP"].'</option>';
+						}
 					}
-					elseif (isset($table["idP"])){
-						echo '<option value="'.$table["idP"].'">'.$table["NomP"].'</option>';
-					}
-					else {
-						echo '<option value="'.$table["idC"].'">'.$table["NomP"].'</option>';
-					}
-				}
-				$table
-				?>
-			</select>
-			<input type="submit" value="Modifier"/>
-		</fieldset>
-	</form>
+					$table
+					?>
+				</select>
+				<input type="submit" value="Modifier">
+				<!-- Utilisation d'un captcha avant d'envoyer le formulaire -->
+				<div class="g-recaptcha" data-sitekey="6Le1-mUmAAAAAEazgWka4ZdGLhJh4kM_z21jUvLn"></div>
+			</fieldset>
+		</form>
 	<?php 
 }
 
 // Fonction pour permetre à l'utilisateur 
 function form_modification($table, $id){
 	$bdd = new PDO("sqlite:bdd/Ventes.sqlite");
-	if ($table == 'Achat') {
-		/*
-		Voir plus tard
-
-		// NB: $id[0] = idC & $id[1] = idP
-		$idC = $id[0];
-		$idP = $id[1];
-
-		$rq ="SELECT * FROM $table WHERE idC = $idC AND idP = $idP 
-		INNER JOIN Acheteurs ON Acheteurs.idC = $table.idC
-		INNER JOIN Produits ON Produits.idP = $table.idP";
-		// Execution de la requete
-		$resultat = $bdd->query($rq);
-		$tableau_assoc = $resultat->fetch(PDO::FETCH_ASSOC);
-		?>
-		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-		<fieldset> 
-			<label for="id_mail">Adresse Mail : </label><input type="email" name="mail" id="id_mail" placeholder="@mail" required size="20" value="<?php echo $mail ?>" readonly /><br />
-			<label for="id_rue">Rue : </label><input type="text" name="rue" id="id_rue" placeholder="adresse" required size="20" value="<?php echo $tableau_assoc['ADRESSE'] ?>"/><br />
-			<label for="id_groupe">Groupe : </label>
-			<input type="submit" value="modifier" name = "choix"/>
-		</fieldset>
-	</form>
-	
-	<?php
-	*/
-	}
-	elseif ($table == 'Acheteurs') {
+	// Modification de la table des clients
+	if ($table == 'Acheteurs') {
 		$rq ="SELECT * FROM $table WHERE idC = $id";
 		// Execution de la requete
 		$resultat = $bdd->query($rq);
 		$tableau_assoc = $resultat->fetch(PDO::FETCH_ASSOC);
-		?>
-		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-		
+		?> 
+		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="text-center">
 		<fieldset> 
-			<label for="id_">Id acheteur :</label>
-				<input type="text" name="idC" id="id_idC" required value="<?php echo $id ?>" readonly /><br />
-			<label for="id_rue">Nom : </label>
-				<input type="text" name="NomP" id="id_nom" placeholder="Nom" required value="<?php echo $tableau_assoc['NomP'] ?>"/><br />
+			<label for="id_idC">Id acheteur :</label>
+				<input type="text" name="idC" id="id_idC" required value="<?php echo $id ?>" readonly ><br>
+			<label for="id_nom">Nom : </label>
+				<input type="text" name="NomP" id="id_nom" placeholder="Nom" required value="<?php echo $tableau_assoc['NomP'] ?>"><br>
 			<label for="id_ville">Ville : </label>
-				<input type="text" name="ville" id="id_ville" placeholder="Ville" required value="<?php echo $tableau_assoc['Ville'] ?>"/><br />
-				<input type="submit" value="modifier"/>
+				<input type="text" name="ville" id="id_ville" placeholder="Ville" required value="<?php echo $tableau_assoc['Ville'] ?>"><br>
+				<input type="submit" value="modifier">
 		</fieldset>
+		</form>
+	
 	
 	<?php
 	}
 
+	// Modification de la table des produits
 	else{
 		$rq ="SELECT * FROM $table WHERE idP = $id";
 		// Execution de la requete
 		$resultat = $bdd->query($rq);
 		$tableau_assoc = $resultat->fetch(PDO::FETCH_ASSOC);
-		var_dump($tableau_assoc);
+		?>
+
+
+		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
 		
+		<fieldset> 
+			<label for="id_idP">Id Produit :</label>
+				<input type="text" name="idP" id="id_idP" size="26" required value="<?php echo $id ?>" readonly ><br >
+			<label for="id_nom">Nom du produit : </label>
+				<input type="text" name="NomP" id="id_nom" size="20" placeholder="Nom" required value="<?php echo $tableau_assoc['NomP'] ?>"><br >
+			<label for="id_prix">Prix : </label>
+				<input type="number" step="0.01" name="Prix" id="id_prix"  placeholder="Prix" required value="<?php echo $tableau_assoc['Prix'] ?>"><br >
+			<label for="id_image">Illustration (.jpg) : </label>
+				<input type="text" name="Image" id="id_image" size="20" placeholder="Image" required value="<?php echo $tableau_assoc['Illustration'] ?>"><br >
+				<p class="fw-light">NB : veillez à ce que l'image soit déja présente dans le dossier avant de modifier ce champ</p>
+				
+				<input type="submit" value="modifier">
+		</fieldset>
+		</form>
+	
+	<?php
 	}
 
 }
