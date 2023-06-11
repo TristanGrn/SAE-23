@@ -51,7 +51,7 @@ session_start();
             header("Location: index.php");
 
             // Enregistrements des connexions dans fichier Logs
-            $logs = fopen('Logs/logs.log', 'a+');
+            $logs = fopen('../Logs/logs.log', 'a+');
             // Infos de la connexion
             fputs($logs,"Connexion : {
               Login : ".$_POST['login']."
@@ -68,7 +68,7 @@ session_start();
             echo "L'utilisateur ".$_POST['login']." n'existe pas ou le mot de passe entrée est erroné";
 
             // Enregistrements des connexions dans fichier Logs
-            $logs = fopen('Logs/logs.log', 'a+');
+            $logs = fopen('../Logs/logs.log', 'a+');
             // Infos de la connexion
             fputs($logs,"Tentative de connexion : {
               Login : ".$_POST['login']."
