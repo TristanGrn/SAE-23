@@ -3,7 +3,6 @@ include "fonctions.php";
 include "formulaire.php";
 session_start();
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
