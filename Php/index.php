@@ -18,7 +18,7 @@ session_start();
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-	<?php
+<?php
 	// affichage du header
  	aff_header();
 	if (isset($_GET["action"]) && $_GET["action"] == "logout" && !empty($_SESSION)) {
@@ -35,7 +35,7 @@ session_start();
 
 	// Sinon affichage accueil
 	else {
-	?>
+?>
 	<h1>Découvrez notre séléction plein air :</h1>
 	<br>
 	<div class="container justify-content-center">
