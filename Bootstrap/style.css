@@ -1,4 +1,6 @@
 /*Définition des styles*/
+
+/* Permet de séparer les éléments de la barre de nav par un trait */
 .nav-bar li {
     float: left;
     padding: 0 0.1em;
@@ -9,11 +11,36 @@
     margin-left: 1em;
 }
   
-.nav-bar li:last-child, li:nth-child(2){
-    clear: both;
+.nav-bar li:last-child{
     border: none;
 }
 
+/* Uniformisation de la taille des inputs */
 input[type='number']{
     width: 17.5em;
 } 
+
+/* Choix couleur du header et donc barre de nav */
+header{
+    background-color: #224a33;
+}
+
+/* Couleur de background du body */
+body {
+    background-color: #c3bea7;
+}
+
+/* Couleur du text */
+p, label, h1, tr{
+    color: #3e3a3a;
+}
+
+/* epacement du footer via marge */
+footer{
+    margin-top: 1em;
+}
+
+/* couleur des séparations du tableau d'affichage */
+tr, td {
+    border-color: #1c874c;
+  }
