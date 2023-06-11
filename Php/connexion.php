@@ -8,7 +8,7 @@ session_start();
 <html lang="fr">
 <head>
 	<meta charset="UTF-8">
-	<title>Accueil</title>
+	<title>Connexion</title>
 	<link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
 	<!-- Feuille de style non bootstrap : -->
 	<link href="../Bootstrap/style.css" rel="stylesheet" type="text/css">
