@@ -22,7 +22,7 @@ session_start();
  	aff_header();
 	if (isset($_GET["action"]) && $_GET["action"] == "logout" && !empty($_SESSION)) {
 		$_SESSION = [];
-		session_destroy();
+		session_destroy
 		// Si deconnexion, redirection vers page de connexion
 		header("Location: connexion.php");
 		}
@@ -30,6 +30,7 @@ session_start();
 	if (empty($_SESSION)) {
 		//  Si pas de session alors redirection vers conenxion.php
 		header("Location: connexion.php");
+		die();
 	}
 
 	// Sinon affichage accueil
