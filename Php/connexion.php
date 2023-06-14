@@ -2,7 +2,6 @@
 session_start();
 include "fonctions.php";
 include "formulaire.php";
-
 ?>
 
 <!DOCTYPE html>
