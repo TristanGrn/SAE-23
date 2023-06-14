@@ -25,13 +25,11 @@ session_start();
 		session_destroy
 		// Si deconnexion, redirection vers page de connexion
 		header("Location: connexion.php");
-		die();
 		}
 
 	if (empty($_SESSION)) {
 		//  Si pas de session alors redirection vers conenxion.php
 		header("Location: connexion.php");
-		die();
 	}
 
 	// Sinon affichage accueil
