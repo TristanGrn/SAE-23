@@ -25,14 +25,14 @@ session_start();
 		$_SESSION = [];
 		session_destroy();
 		// Si deconnexion, redirection vers page de connexion
-		header("Location: connexion.php");
-		exit();
+		echo '<script>window.location.href = "connexion.php";</script>';
+        exit();
 		}
 
 	if (empty($_SESSION)) {
 		//  Si pas de session alors redirection vers conenxion.php
-		header("Location: connexion.php");
-		exit();
+		echo '<script>window.location.href = "connexion.php";</script>';
+        exit();
 	}
 
 	// Sinon affichage accueil

@@ -25,7 +25,8 @@ session_start();
     <?php 
     // SI pas de session alors rreditrection vers page de connexion
     if (empty($_SESSION)){
-      header("Location: connexion.php");
+      echo '<script>window.location.href = "connexion.php";</script>';
+      exit();
     }
     
     // Si pas admin alors redirection vers accueil
@@ -36,7 +37,8 @@ session_start();
             echo "<div class='spinner-border' role='status'>";
             echo "</div>";
           echo "</div>";
-        header("Refresh: 2; URL = index.php");  
+          echo '<script>window.location.href = "index.php";</script>';
+          exit();
     }
     else {
       // Affichage des elements de modification

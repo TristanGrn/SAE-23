@@ -48,8 +48,8 @@ session_start();
             $_SESSION['login'] = $_POST['login'];
             if (statut($_SESSION['login']) == "Admin") $_SESSION['statut'] = "admin";
             else $_SESSION['statut'] = "Utilisateur";
-            header("Location: index.php");
-
+            echo '<script>window.location.href = "index.php";</script>';
+            exit();
             // Enregistrements des connexions dans fichier Logs
             $logs = fopen('../Logs/logs.log', 'a+');
             // Infos de la connexion
@@ -95,7 +95,8 @@ session_start();
         </article>
         <?php
         // Redirection vers la page index.php
-        header("Refresh: 2; URL = index.php");
+        echo '<script>window.location.href = "index.php";</script>';
+        exit();
       } ?>
     
 	</div>
