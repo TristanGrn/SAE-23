@@ -21,13 +21,13 @@ function aff_header(){
                             if ($_SESSION['statut'] == 'admin') {
                                 ?>
                                 <li class="nav-item">
-                                    <a href="" class="nav-link active"> Inserer un élément</a>
+                                    <a href="insertion.php" class="nav-link active"> Inserer un élément</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="modification.php" class="nav-link active"> Modifier un élément </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="" class="nav-link active"> Supprimer un élément </a>
+                                    <a href="suppression.php" class="nav-link active"> Supprimer un élément </a>
                                 </li>
                             <?php    
                             }
@@ -309,3 +309,5 @@ function affichage($tab){
 }
 
 ?>
+
+<!-- _____________________________________ FONCTIONS JULES ______________________________________ -->
