@@ -44,3 +44,7 @@ footer{
 tr, td {
     border-color: #1c874c;
   }
+
+.wrong{
+    color: red;
+}
