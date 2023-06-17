@@ -28,6 +28,7 @@ include "formulaire.php";
     // SI pas de session alors rreditrection vers page de connexion
     if (empty($_SESSION)){
       header("Location: connexion.php");
+      exit();
     }
     
     // Si pas admin alors redirection vers accueil
@@ -39,6 +40,7 @@ include "formulaire.php";
             echo "</div>";
           echo "</div>";
         header("Refresh: 2; URL = index.php");  
+        exit();
     }
     else {
       // Affichage des elements de modification
