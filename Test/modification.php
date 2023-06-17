@@ -1,7 +1,7 @@
 <?php
+session_start();
 include "fonctions.php";
 include "formulaire.php";
-session_start();
 ?>
 
 <!-- Auteur : Granjeon Tristan -->
