@@ -1,4 +1,5 @@
 <?php
+// ---Auteur : Granjeon Tristan ---
 // Création du header avec barre de navigation
 function aff_header(){
     ?>
@@ -68,7 +69,7 @@ function aff_header(){
                             <?php echo "Bienvenue " . $_SESSION["login"]; ?>
                         </div>
                         <div class="col-4">
-                            <a href="index.php?action=logout" class="btn btn-danger text-end" onclick="return Test()">
+                            <a href="index.php?action=logout" class="btn btn-danger text-end" onclick="return deco()">
 					           	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
 						            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
 						        </svg>
@@ -145,15 +146,7 @@ function statut($login){
     return $statut;
 }
 
-// Fonction pour récuper l'idC et l'idP si l'utilisateur choisis la table Achat
-function get_IDs($IDs){
-    $IDs = explode(";", $IDs);
-    // NB idC d'abbord puis idP
-    $IDs = [$IDs[0], $IDs[1]];
-    return $IDs;
-}
-
-// Modification de la table acheteurs
+// Modification de la table acheteurs  
 function modif_acheteur($tab, $idC, $NomP, $ville){
     $reussite = 0;
     try{
@@ -308,6 +301,173 @@ function affichage($tab){
     }
 }
 
-?>
+// --- Auteur : Keroulas Jules ---
+function listerProduits()	{
+    $retour = false ;	
+    //connexion à la bdd
+    $madb = new PDO('sqlite:../bdd/Ventes.sqlite');
+    
+    //ecriture de la rq
+    $rq = "SELECT IDP, NOMP, PRIX, ILLUSTRATION FROM produits;";
+    //var_dump($rq);
 
-<!-- _____________________________________ FONCTIONS JULES ______________________________________ -->
+    //execution de la rq
+    $resultat = $madb -> query($rq);
+
+    //interpretation des resultats
+    $tableau_assoc=$resultat->fetchAll(PDO::FETCH_ASSOC);
+    if (sizeof($tableau_assoc) != 0) $retour = $tableau_assoc;
+
+    return $retour;
+}
+//***************************************************************************************************
+function ajouterProduit($NomP,$Prix,$Illustration){
+    $retour=0;
+    
+    //Connexion à la BDD
+    $madb = new PDO('sqlite:../bdd/Ventes.sqlite'); //pas de login mot de passe avec sqlite
+	$madb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    try{
+        //2-requête
+        $rq = "INSERT INTO Produits('NomP', 'Prix', 'Illustration') VALUES ('".$NomP."','".$Prix."','".$Illustration."');";			
+            
+        //-3 Execution de la requête
+        $retour = $madb->exec($rq);
+        echo"Les données ont été enregistrées avec succès !";
+        $tab = 'Produits';
+        affichage($tab);
+        
+        return $retour;
+        
+        //throw new Exception("Une erreur s'est produite.");
+    }
+    catch (Exception $e){
+        echo "Erreur, ce produit est déja dans la liste !";
+        //echo "Erreur : " . $e->getMessage();
+    }
+}
+function supprimerProduit($idP){
+    $retour=0;
+    
+    //Connexion à la BDD
+    $madb = new PDO('sqlite:../bdd/Ventes.sqlite'); //pas de login mot de passe avec sqlite
+	$madb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    //1-connexion déjà faite
+    //2-requête	
+    $rq = "DELETE FROM Produits WHERE idP=$idP";
+    
+    //-3 Execution de la requête
+    $retour = $madb->exec($rq);
+    
+    return $retour;
+}
+function affichageSuppression($tab){
+    // Récupération des données depuis bdd
+    $bdd = new PDO("sqlite:../bdd/Ventes.sqlite");
+    if ($tab == 'Acheteurs') {
+        $rq = "SELECT * FROM $tab";
+    }
+    elseif ($tab == 'Produits') {
+        $rq = "SELECT idP, NomP AS 'Produit', Prix, Illustration AS 'Photo' FROM $tab";
+    }
+    $resultat = $bdd->query($rq);
+    $tableau_assoc = $resultat->fetchAll(PDO::FETCH_ASSOC);
+
+    // création de la table
+    echo '<table class="table">';
+    echo '<thead>';
+	echo '<tr>';
+    
+    // Si il n'y a pas de photo alors affichage tableau basic
+    if(!isset($tableau_assoc[0]['Photo'])){
+        // Si il y a eu un POST l'élément modifier sera entouré de vert
+        if (!empty($_POST)) {
+            foreach($tableau_assoc[0] as $colonne=>$value){	
+                echo '<th scope="col">'.$colonne.'</th>';	
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                foreach($tableau_assoc as $ligne){
+                    if ($ligne["idC"] == $_POST["idC"]) {
+                        echo "<tr class='table-success'>";
+                    }
+                    else{
+                         echo '<tr>';}
+                    foreach($ligne as $elem){	
+                        echo "<td>$elem</td>";		
+                    }
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+        // Sinon affichage basic
+        else {
+            foreach($tableau_assoc[0] as $colonne=>$value){	
+                echo '<th scope="col">'.$colonne.'</th>';	
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                // le corps de la table
+                foreach($tableau_assoc as $ligne){
+                         echo '<tr>';
+                    foreach($ligne as $elem){	
+                        echo "<td>$elem</td>";		
+                        
+                    }
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+    }
+    // Si il y a des photos alors affichage tableau avec illustrations
+    elseif (isset($tableau_assoc[0]['Photo'])) {
+        // Si il y a eu un POST l'élément modifier sera entouré de vert
+        if (empty($_POST)) {
+            foreach($tableau_assoc[0] as $colonne=>$value){	
+                echo '<th scope="col">'.$colonne.'</th>';	
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                // le corps de la table
+                foreach($tableau_assoc as $ligne){
+                    echo "<td>".$ligne['idP']."</td>";
+                    echo "<td>".$ligne['Produit']."</td>";
+                    echo "<td>".$ligne['Prix']." €</td>";
+                    echo "<td><img src='../Images/".$ligne['Photo'].".jpg' 
+                    class='img-fluid rounded' width='100' alt=".$ligne['Photo']." ></td>";
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+        // Sinon affichage tableau basic
+        else{
+            foreach($tableau_assoc[0] as $colonne=>$value){
+                if($colonne !=('idP'))	{
+                echo '<th scope="col">'.$colonne.'</th>';	
+                }
+            }
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                // le corps de la table
+                foreach($tableau_assoc as $ligne){
+                    echo '<tr>'; 
+                    echo "<td>".$ligne['Produit']."</td>";
+                    echo "<td>".$ligne['Prix']." €</td>";
+                    echo "<td><img src='../Images/".$ligne['Photo'].".jpg' 
+                    class='img-fluid rounded' width='100' alt=".$ligne['Photo']." ></td>";
+                    echo "</tr>";
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }   
+    }
+}
+?>

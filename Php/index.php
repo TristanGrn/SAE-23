@@ -3,7 +3,7 @@ session_start();
 include "fonctions.php";
 include "formulaire.php";
 ?>
-
+<!-- Auteur : Granjeon Tristan -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>

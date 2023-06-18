@@ -3,7 +3,7 @@ session_start();
 include "fonctions.php";
 include "formulaire.php";
 ?>
-
+<!-- Auteur : Granjeon Tristan -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -48,8 +48,6 @@ include "formulaire.php";
             $_SESSION['login'] = $_POST['login'];
             if (statut($_SESSION['login']) == "Admin") $_SESSION['statut'] = "admin";
             else $_SESSION['statut'] = "Utilisateur";
-            echo '<script>window.location.href = "index.php";</script>';
-            exit();
             // Enregistrements des connexions dans fichier Logs
             $logs = fopen('../Logs/logs.log', 'a+');
             // Infos de la connexion
@@ -62,10 +60,13 @@ include "formulaire.php";
             fputs($logs, "\n\r");
             // Fermeture fichier
             
+            echo '<script>window.location.href = "index.php";</script>';
+            exit();
+            
           }
           // Si connexion non OK alors info erreur et enregistrement dans logs
           else{
-            echo "L'utilisateur ".$_POST['login']." n'existe pas ou le mot de passe entrée est erroné";
+            echo "<p class='wrong'>L'utilisateur ".$_POST['login']." n'existe pas ou le mot de passe entrée est erroné</p>";
 
             // Enregistrements des connexions dans fichier Logs
             $logs = fopen('../Logs/logs.log', 'a+');

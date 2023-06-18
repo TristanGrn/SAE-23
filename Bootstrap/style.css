@@ -45,6 +45,7 @@ tr, td {
     border-color: #1c874c;
   }
 
+/* Texte en rouge en cas d'erreur de connexion */
 .wrong{
     color: red;
 }

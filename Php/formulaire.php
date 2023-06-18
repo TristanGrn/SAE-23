@@ -1,5 +1,5 @@
 <?php
-
+// --- Auteur Granjeon Tristan ---
 // Formulaire pour connaitre la table que l'utilisateur souhaite modifier
 function form_choix_table(){
     $bdd = new PDO("sqlite:../bdd/Ventes.sqlite");
@@ -142,7 +142,51 @@ function form_modification($table, $id){
 
 }
 
+// --- Auteur Keroulas Jules ---
+function FormulaireAjoutProduit(){
+	// connexion BDD et récupération des produits
+	$madb = new PDO('sqlite:../bdd/Ventes.sqlite');
+		
+	$rq = "SELECT DISTINCT idP, NomP, Prix, Illustration FROM PRODUITS ORDER BY idP;";
+
+	$resultats = $madb->query($rq);
+
+	$produits = $resultats->fetchAll(PDO::FETCH_ASSOC);
+	?>
+	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="text-center">
+		<fieldset>
+			<label for="id_nom">Produit : </label>
+				<input type="text" name="NomP" id="id_nom" placeholder="Nom">
+				<br>
+			<label for="id_prix">Prix : </label>
+				<input type="number" step="0.01" name="prix" id="id_prix" placeholder="Prix">
+				<br>
+			<label for="id_illustration">Illustration (.jpg) : </label>
+				<input type="text" name="illustration" id="id_illustration" placeholder="Illustration">
+				<br>
+			<input type="submit" value="Insérer">
+		</fieldset>
+	</form>
+		<?php
+			echo "<br>";
+	}
+
+function FormulaireSuppressionProduit(){
+	// connexion BDD et récupération des produits
+	$madb = new PDO('sqlite:../bdd/Ventes.sqlite');
+		
+	$rq = "SELECT DISTINCT idP, NomP, Prix, Illustration FROM PRODUITS ORDER BY idP;";
+
+	$resultats = $madb->query($rq);
+	?>
+	<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="text-center">
+		<fieldset>
+			<label for="idP">Numéro du produit à supprimer : </label>
+			<input type="number" step="1" name="idP" id="idP" placeholder="Id produit" required size="20">
+			<br>
+			<input type="submit" value="Supprimer">
+		</fieldset>
+	</form>
+	<?php
+	}
 ?>
-
-<!-- _____________________________________ FORMULAIRES JULES ______________________________________ -->
-

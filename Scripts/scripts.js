@@ -10,7 +10,7 @@ function valideCaptcha() {
 }
 
 // S'assure que l'utilisateur souhaite se déconnecter
-function Test() {
+function deco() {
     if (confirm("Attention vous êtes sur le point de vous déconnecter")) {
         return true;
       } else {

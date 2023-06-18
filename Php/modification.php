@@ -3,7 +3,7 @@ session_start();
 include "fonctions.php";
 include "formulaire.php";
 ?>
-
+<!-- Auteur : Granjeon Tristan -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -23,7 +23,7 @@ include "formulaire.php";
 	<?php aff_header(); ?>
   <div class="container">
     <?php 
-    // SI pas de session alors rreditrection vers page de connexion
+    // SI pas de session alors redirection vers page de connexion
     if (empty($_SESSION)){
       echo '<script>window.location.href = "connexion.php";</script>';
       exit();
@@ -55,16 +55,7 @@ include "formulaire.php";
         }
 
         if (isset($_POST['elem'])) {
-
-          if ($_SESSION['table'] == 'Achat') {
-            $IDs = get_IDs($_POST['elem']);
-            form_modification($_SESSION['table'], $IDs);
-          }
-
-          else {
-            form_modification($_SESSION['table'], $_POST['elem']);
-          }
-
+          form_modification($_SESSION['table'], $_POST['elem']);
         }
 
         // Affichage dans la cas de modification de la table acheteurs
